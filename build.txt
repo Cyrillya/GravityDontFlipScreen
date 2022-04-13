@@ -1,0 +1,3 @@
+displayName = Gravity Don't Flip the Screen
+author = -Cyril-
+version = 1.0
