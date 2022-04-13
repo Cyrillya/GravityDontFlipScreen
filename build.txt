@@ -1,3 +1,4 @@
-displayName = Gravity Don't Flip the Screen
+displayName = Gravitation Don't Flip the Screen
 author = -Cyril-
 version = 1.0
+homepage = https://github.com/Crapsky233/GravityDontFlipScreen

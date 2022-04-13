@@ -1,1 +1,4 @@
-Gravity Don't Flip the Screen is a pretty cool mod, it does...this. Modify this file with a description of your mod.
+﻿This mod makes the gravity inversion effect not flip your screen, only the player flips.
+这个Mod让重力翻转效果在使用时不会翻转你的屏幕，只有玩家会被翻转。
+
+Github: https://github.com/Crapsky233/GravityDontFlipScreen
