@@ -19,6 +19,7 @@ namespace GravityDontFlipScreen
             On.Terraria.GameContent.SmartCursorHelper.SmartCursorLookup += SmartCursorHelper_SmartCursorLookup;
             // making cursor direct to the correct position
             On.Terraria.Player.ItemCheck += Player_ItemCheck;
+            On.Terraria.Player.QuickGrapple += Player_QuickGrapple;
             // all things draw normally
             On.Terraria.Main.DoDraw += Main_DoDraw;
             // turn player back up-side down when drawing
@@ -58,6 +59,15 @@ namespace GravityDontFlipScreen
             Main.mouseY = mouseY;
         }
 
+        private void Player_QuickGrapple(On.Terraria.Player.orig_QuickGrapple orig, Player self) {
+            if (self.whoAmI != Main.myPlayer || self.gravDir != -1) {
+                orig.Invoke(self);
+                return;
+            }
+            self.gravDir = 1;
+            orig.Invoke(self);
+            self.gravDir = -1;
+        }
 
         //Player.tileTargetX = (int) (((float) Main.mouseX + Main.screenPosition.X) / 16f);
         //Player.tileTargetY = (int) (((float) Main.mouseY + Main.screenPosition.Y) / 16f);
