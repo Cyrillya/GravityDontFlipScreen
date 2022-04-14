@@ -1,5 +1,5 @@
 displayName = Gravitation Don't Flip the Screen
 author = -Cyril-
-version = 0.1
+version = 1.1
 side = Client
 homepage = https://github.com/Crapsky233/GravityDontFlipScreen
