@@ -7,9 +7,9 @@ using System;
 
 namespace GravityDontFlipScreen
 {
-    internal class GravityFlipSystem : ModSystem
+    public class GravityFlipSystem : ModSystem
     {
-        public float gravDir;
+        internal static float gravDir;
 
         public override void Load() {
             // placing tiles
@@ -21,7 +21,10 @@ namespace GravityDontFlipScreen
             On.Terraria.Player.ItemCheck += Player_ItemCheck;
             On.Terraria.Player.QuickGrapple += Player_QuickGrapple;
             // all things draw normally
-            On.Terraria.Main.DoDraw += Main_DoDraw;
+            Main.QueueMainThreadAction(() =>
+            {
+                On.Terraria.Main.DoDraw += Main_DoDraw;
+            });
             // turn player back up-side down when drawing
             On.Terraria.Graphics.Renderers.LegacyPlayerRenderer.DrawPlayerFull += LegacyPlayerRenderer_DrawPlayerFull;
         }
