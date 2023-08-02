@@ -13,23 +13,23 @@ namespace GravityDontFlipScreen
 
         public override void Load() {
             // placing tiles
-            IL.Terraria.Player.Update += Player_Update;
+            IL_Player.Update += Player_Update;
             // smart cursor
-            On.Terraria.Player.SmartInteractLookup += Player_SmartInteractLookup;
-            On.Terraria.GameContent.SmartCursorHelper.SmartCursorLookup += SmartCursorHelper_SmartCursorLookup;
+            On_Player.SmartInteractLookup += Player_SmartInteractLookup;
+            Terraria.GameContent.On_SmartCursorHelper.SmartCursorLookup += SmartCursorHelper_SmartCursorLookup;
             // making cursor direct to the correct position
-            On.Terraria.Player.ItemCheck += Player_ItemCheck;
-            On.Terraria.Player.QuickGrapple += Player_QuickGrapple;
+            On_Player.ItemCheck += Player_ItemCheck;
+            On_Player.QuickGrapple += Player_QuickGrapple;
             // all things draw normally
             Main.QueueMainThreadAction(() =>
             {
-                On.Terraria.Main.DoDraw += Main_DoDraw;
+                On_Main.DoDraw += Main_DoDraw;
             });
             // turn player back up-side down when drawing
-            On.Terraria.Graphics.Renderers.LegacyPlayerRenderer.DrawPlayerFull += LegacyPlayerRenderer_DrawPlayerFull;
+            Terraria.Graphics.Renderers.On_LegacyPlayerRenderer.DrawPlayerFull += LegacyPlayerRenderer_DrawPlayerFull;
         }
 
-        private void Player_SmartInteractLookup(On.Terraria.Player.orig_SmartInteractLookup orig, Player self) {
+        private void Player_SmartInteractLookup(On_Player.orig_SmartInteractLookup orig, Player self) {
             if (self.whoAmI != Main.myPlayer || self.gravDir != -1) {
                 orig.Invoke(self);
                 return;
@@ -39,7 +39,7 @@ namespace GravityDontFlipScreen
             self.gravDir = -1;
         }
 
-        private void SmartCursorHelper_SmartCursorLookup(On.Terraria.GameContent.SmartCursorHelper.orig_SmartCursorLookup orig, Player player) {
+        private void SmartCursorHelper_SmartCursorLookup(Terraria.GameContent.On_SmartCursorHelper.orig_SmartCursorLookup orig, Player player) {
             if (player.whoAmI != Main.myPlayer || player.gravDir != -1) {
                 orig.Invoke(player);
                 return;
@@ -49,20 +49,20 @@ namespace GravityDontFlipScreen
             player.gravDir = -1;
         }
 
-        private void Player_ItemCheck(On.Terraria.Player.orig_ItemCheck orig, Player self, int i) {
-            if (i != Main.myPlayer || self.gravDir != -1) {
-                orig.Invoke(self, i);
+        private void Player_ItemCheck(On_Player.orig_ItemCheck orig, Player self) {
+            if (self.whoAmI != Main.myPlayer || self.gravDir is not -1) {
+                orig.Invoke(self);
                 return;
             }
             // This is vanilla MouseWorld code:
             // if (self.gravDir == -1f) result.Y = screenPosition.Y + (float)screenHeight - (float)mouseY;
             int mouseY = Main.mouseY;
             Main.mouseY = Main.screenHeight - Main.mouseY;
-            orig.Invoke(self, i);
+            orig.Invoke(self);
             Main.mouseY = mouseY;
         }
 
-        private void Player_QuickGrapple(On.Terraria.Player.orig_QuickGrapple orig, Player self) {
+        private void Player_QuickGrapple(On_Player.orig_QuickGrapple orig, Player self) {
             if (self.whoAmI != Main.myPlayer || self.gravDir != -1) {
                 orig.Invoke(self);
                 return;
@@ -100,7 +100,7 @@ namespace GravityDontFlipScreen
             });
         }
 
-        private void LegacyPlayerRenderer_DrawPlayerFull(On.Terraria.Graphics.Renderers.LegacyPlayerRenderer.orig_DrawPlayerFull orig, Terraria.Graphics.Renderers.LegacyPlayerRenderer self, Terraria.Graphics.Camera camera, Player drawPlayer) {
+        private void LegacyPlayerRenderer_DrawPlayerFull(Terraria.Graphics.Renderers.On_LegacyPlayerRenderer.orig_DrawPlayerFull orig, Terraria.Graphics.Renderers.LegacyPlayerRenderer self, Terraria.Graphics.Camera camera, Player drawPlayer) {
             if (drawPlayer.whoAmI != Main.myPlayer) {
                 orig.Invoke(self, camera, drawPlayer);
                 return;
@@ -110,7 +110,7 @@ namespace GravityDontFlipScreen
             drawPlayer.gravDir = 1;
         }
 
-        private void Main_DoDraw(On.Terraria.Main.orig_DoDraw orig, Main self, GameTime gameTime) {
+        private void Main_DoDraw(On_Main.orig_DoDraw orig, Main self, GameTime gameTime) {
             gravDir = Main.LocalPlayer.gravDir;
             Main.LocalPlayer.gravDir = 1;
             orig.Invoke(self, gameTime);
